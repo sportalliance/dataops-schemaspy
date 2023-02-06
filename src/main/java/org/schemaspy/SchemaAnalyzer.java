@@ -172,6 +172,7 @@ public class SchemaAnalyzer {
                     schemas.stream().map(s -> String.format("'%s'", s)).collect(Collectors.joining(System.lineSeparator())));
 
             String dbName = config.getDb();
+            String dbDisplayName = config.getDbDisplayName();
             File outputDir = commandLineArguments.getOutputDirectory();
 
             List<MustacheSchema> mustacheSchemas = new ArrayList<>();
@@ -190,12 +191,13 @@ public class SchemaAnalyzer {
                     return null;
                 mustacheSchemas.add(new MustacheSchema(db.getSchema(), ""));
                 mustacheCatalog = new MustacheCatalog(db.getCatalog(), "");
+                dbDisplayName = db.getDisplayName();
             }
 
             new Jar(layoutFolder.url(), outputDir, notHtml()).copyJarResourceToPath();
 
             DataTableConfig dataTableConfig = new DataTableConfig(config, commandLineArguments);
-            MustacheCompiler mustacheCompiler = new MustacheCompiler(dbName, config, dataTableConfig);
+            MustacheCompiler mustacheCompiler = new MustacheCompiler(dbDisplayName, config, dataTableConfig);
             HtmlMultipleSchemasIndexPage htmlMultipleSchemasIndexPage = new HtmlMultipleSchemasIndexPage(mustacheCompiler);
             try (Writer writer = new DefaultPrintWriter(outputDir.toPath().resolve(INDEX_DOT_HTML).toFile())) {
                 htmlMultipleSchemasIndexPage.write(mustacheCatalog, mustacheSchemas, config.getDescription(), getDatabaseProduct(meta), writer);
@@ -234,6 +236,7 @@ public class SchemaAnalyzer {
             FileUtils.forceMkdir(outputDir);
 
             String dbName = config.getDb();
+            String dbDisplayName = config.getDbDisplayName();
 
             String catalog = commandLineArguments.getCatalog();
 
@@ -262,7 +265,7 @@ public class SchemaAnalyzer {
             //
             // create our representation of the database
             //
-            Database db = new Database(dbmsMeta, dbName, catalog, schema);
+            Database db = new Database(dbmsMeta, dbName, catalog, schema, dbDisplayName);
             databaseService.gatherSchemaDetails(db, schemaMeta, progressListener);
 
 
@@ -398,7 +401,7 @@ public class SchemaAnalyzer {
                 LOGGER.error("RelationShipDiagramError", exception)
         );
         DataTableConfig dataTableConfig = new DataTableConfig(config, commandLineArguments);
-        MustacheCompiler mustacheCompiler = new MustacheCompiler(db.getName(), config, dataTableConfig);
+        MustacheCompiler mustacheCompiler = new MustacheCompiler(db.getDisplayName(), config, dataTableConfig);
 
         HtmlRelationshipsPage htmlRelationshipsPage = new HtmlRelationshipsPage(mustacheCompiler, hasRealConstraints, !impliedConstraints.isEmpty());
         try (Writer writer = new DefaultPrintWriter(outputDir.toPath().resolve("relationships.html").toFile())) {

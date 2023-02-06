@@ -91,6 +91,7 @@ public final class Config implements HtmlConfig {
     private String password;
     private Boolean promptForPassword;
     private String db;
+    private String dbDisplayName;
     private String host;
     private Integer port;
     private Boolean exportedKeysEnabled;
@@ -211,6 +212,18 @@ public final class Config implements HtmlConfig {
         if (db == null)
             db = pullParam("-db");
         return db;
+    }
+    public void setDbDisplayName(String dbDisplayName) {
+        this.dbDisplayName = dbDisplayName;
+    }
+
+    /**
+     * @return Display Name of database as supplied with -dbDisplayName or set during multi schema analysis
+     */
+    public String getDbDisplayName() {
+        if (dbDisplayName == null)
+            dbDisplayName = pullParam("-dbDisplayName");
+        return dbDisplayName;
     }
 
     public void setHost(String host) {

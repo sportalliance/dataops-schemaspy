@@ -42,6 +42,7 @@ public class Database {
 
     private final DbmsMeta dbmsMeta;
     private final String databaseName;
+    private final String databaseDisplayName;
     private final Catalog catalog ;
     private final Schema schema;
     private final Map<String, Table> tables = new CaseInsensitiveMap<>();
@@ -62,6 +63,21 @@ public class Database {
         this.databaseName = name;
         this.catalog = new Catalog(catalog);
         this.schema = new Schema(schema);
+        this.databaseDisplayName = null;
+    }
+
+    public Database(
+            DbmsMeta dbmsMeta,
+            String name,
+            String catalog,
+            String schema,
+            String displayName
+    ) {
+        this.dbmsMeta = dbmsMeta;
+        this.databaseName = name;
+        this.catalog = new Catalog(catalog);
+        this.schema = new Schema(schema);
+        this.databaseDisplayName = displayName;
     }
 
     public DbmsMeta getDbmsMeta() {
@@ -70,6 +86,12 @@ public class Database {
 
     public String getName() {
         return databaseName;
+    }
+
+    public String getDisplayName() {
+        if(this.databaseDisplayName != null)
+            return this.databaseDisplayName;
+        else return this.databaseName;
     }
 
     public Catalog getCatalog() {
