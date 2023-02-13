@@ -30,8 +30,10 @@ RUN adduser java -h / -D && \
     curl -JLO http://search.maven.org/remotecontent?filepath=org/mariadb/jdbc/mariadb-java-client/$MARIADB_VERSION/mariadb-java-client-$MARIADB_VERSION.jar && \
     curl -JLO http://search.maven.org/remotecontent?filepath=org/postgresql/postgresql/$POSTGRESQL_VERSION/postgresql-$POSTGRESQL_VERSION.jar && \
     curl -JLO http://search.maven.org/remotecontent?filepath=net/sourceforge/jtds/jtds/$JTDS_VERSION/jtds-$JTDS_VERSION.jar && \
+    mkdir /drivers && \
     mkdir /output && \
     chown -R java /drivers_inc && \
+    chown -R java /drivers && \
     chown -R java /output && \
     apk del curl
 
@@ -42,6 +44,7 @@ ADD docker/schemaspy.sh /usr/local/bin/schemaspy
 USER java
 WORKDIR /
 
+VOLUME /drivers /output
 ENV SCHEMASPY_DRIVERS=/drivers
 ENV SCHEMASPY_OUTPUT=/output
 

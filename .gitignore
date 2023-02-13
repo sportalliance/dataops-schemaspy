@@ -1,5 +1,6 @@
 .idea/
-target/
+target/*
+!target/schemaspy*.jar
 schemaspy.iml
 .project
 .classpath
