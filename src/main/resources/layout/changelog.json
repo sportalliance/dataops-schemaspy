@@ -1,0 +1,22 @@
+[
+  {
+    "date": "2023-11-16",
+    "summary": "Removal of deprecated `fct_trainer_class_appointments` table.",
+    "changes": [
+      {"type": "removed", "text": "Remove deprecated `fct_trainer_class_appointments` table."}
+    ]
+  },
+  {
+    "date": "2023-11-15",
+    "summary": "Improvements of contract related tables.",
+    "changes": [
+      {"type": "added", "text": "Add following new columns to `fct_contract` table:\n- `cancellation_fee`\n- `cancellation_date_id`\n-  `cancellation_receipt_date_id`\n- `pre_cancellation_end_date_id`\n- `contract_cancellation_reason_id`"},
+      {"type": "added", "text": "Add new column `contract_status` to `dim_contract_property` table."},
+      {"type": "added", "text": "Add new `dim_contract_cancellation_reason` table."},
+      {"type": "deprecated", "text": "Mark `fct_contract_cancellation` table as deprecated."},
+      {"type": "deprecated", "text": "Mark `dim_contract_cancellation_property` table as deprecated."},
+      {"type": "deprecated", "text": "Mark `dim_cancellation_reason` table as deprecated."}
+    ],
+    "description": "Change 1:\nThe two tables, `fct_contract` and `fct_contract_cancellation`, which contain important details about contracts, have been combined into an improved `fct_contract` table. Now all information about contracts and cancellations is in one place, which makes working with the data easier.\nWe added new columns to `fct_contract` table:\n- `cancellation_fee`: The cost of a cancellation, moved from the old table `fct_contract_cancellation`.\n- `cancellation_date_id`: The cancellation date, also from the old table `fct_contract_cancellation`.\n- `cancellation_receipt_date_id`: The date we received the cancellation notice, moved from the old `fct_contract_cancellation` table.\n- `pre_cancellation_end_date_id`: The date the contract should end before cancellation, from the old `fct_contract_cancellation` table.\n- `contract_cancellation_reason_id`: A foreign key to the new table `dim_contract_cancellation_reason`, which contains information about cancellation reasons.\n\nChange 2:\nWe've also simplified the two old tables, `dim_contract_cancellation_property` and `dim_cancellation_reason` to a single table `dim_contract_cancellation_reason` that stores information about cancellations. The two old tables were linked to the old `fct_contract_cancellation` table. The new `dim_contract_cancellation_reason` table is now directly linked to the `fct_contract` table.\n\nChange 3:\nAdditionally, the `dim_contract_property` table has been improved. It now includes a new column called `contract_status`, which shows whether a contract is active or canceled.\n\nThese changes should significantly simplify the evaluation of contracts and cancellations, as all information about contracts and cancellations is now summarised in a single table, namely `fct_contract`. We will remove the old tables `fct_contract_cancellation` , `dim_contract_cancellation_property` and `dim_cancellation_reason` from our DWH in December 2023."
+  }
+]
